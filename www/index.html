@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Guptrix - Secure Notes</title>
+  <meta name="description" content="Guptrix is a zero-knowledge, end-to-end encrypted notes app built for privacy and security." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body class="antialiased">
+
+  <!-- Toast Notification Container -->
+  <div id="toast_container" class="toast-container" aria-live="polite"></div>
+
+  <div class="app-layout">
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebar_overlay" class="sidebar-overlay"></div>
+
+    <aside id="sidebar" class="sidebar">
+      <!-- Mobile close button -->
+      <button id="sidebar_close_btn" class="sidebar-close-btn" type="button" aria-label="Close sidebar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+
+      <div class="sidebar-top">
+        <div class="logo-area">
+          <div class="logo-icon"></div>
+          <span class="logo-text">Guptrix</span>
+        </div>
+      </div>
+
+      <div class="sidebar-nav">
+        <button id="nav_notes" class="sidebar-nav-item active" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          Notes
+        </button>
+        <button id="nav_export" class="sidebar-nav-item" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Export
+        </button>
+        <button id="nav_import" class="sidebar-nav-item" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          Import
+        </button>
+        <div class="sidebar-divider"></div>
+        <button id="nav_shortcuts" class="sidebar-nav-item" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10"></path></svg>
+          Shortcuts
+        </button>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div id="session_badge" class="session-badge">Signed out</div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <nav class="top-nav">
+        <div class="nav-left">
+          <!-- Mobile hamburger -->
+          <button id="hamburger_btn" class="hamburger-btn" type="button" aria-label="Open menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          <span class="eyebrow hidden-mobile">Secure End-to-End Encrypted Notes</span>
+        </div>
+        <div class="nav-right">
+          <p id="auth_status" class="status-text"></p>
+        </div>
+      </nav>
+
+      <div class="content-scroll">
+        <!-- Auth Panel -->
+        <section id="auth_panel" class="auth-panel panel-grid">
+          <article class="panel-card auth-card">
+            <div class="panel-header">
+              <h2>Create account</h2>
+              <p>Start a new encrypted workspace in seconds.</p>
+            </div>
+            <form id="register_form" class="stack-form">
+              <label>
+                Username
+                <input id="reg_username" name="username" autocomplete="username" placeholder="Enter username" required />
+              </label>
+              <label>
+                Email
+                <input id="reg_email" name="email" type="email" autocomplete="email" placeholder="email@example.com" required />
+              </label>
+              <label>
+                Password
+                <div class="password-wrapper">
+                  <input id="reg_password" name="password" type="password" autocomplete="new-password" placeholder="Create a password" required />
+                  <div id="strength_meter" class="strength-meter" data-strength="">
+                    <div class="strength-meter-bar"></div>
+                    <div class="strength-meter-bar"></div>
+                    <div class="strength-meter-bar"></div>
+                    <div class="strength-meter-bar"></div>
+                  </div>
+                  <div id="strength_label" class="strength-label"></div>
+                </div>
+              </label>
+              <button id="btn_register" type="submit" class="primary-btn">
+                <span class="btn-text">Register</span>
+                <span class="btn-spinner"></span>
+              </button>
+            </form>
+          </article>
+
+          <article class="panel-card auth-card auth-accent">
+            <div class="panel-header">
+              <h2>Sign in</h2>
+              <p>Access your secure workspace.</p>
+            </div>
+            <form id="login_form" class="stack-form">
+              <label>
+                Username
+                <input id="login_username" name="username" autocomplete="username" placeholder="Username" required />
+              </label>
+              <label>
+                Password
+                <input id="login_password" name="password" type="password" autocomplete="current-password" placeholder="Your password" required />
+              </label>
+              <button id="btn_login" type="submit" class="primary-btn secondary-btn">
+                <span class="btn-text">Login</span>
+                <span class="btn-spinner"></span>
+              </button>
+            </form>
+          </article>
+        </section>
+
+        <!-- Dashboard Panel -->
+        <section id="dashboard" class="dashboard" hidden>
+          <div class="dashboard-top">
+            <div class="dashboard-title-area">
+              <h2 id="welcome_title" class="text-gradient">Your notes</h2>
+              <span id="note_count_badge" class="note-count-badge">0 notes</span>
+            </div>
+            <div class="dashboard-actions">
+              <button id="btn_logout" class="secondary-btn" type="button">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                <span class="btn-text">Logout</span>
+              </button>
+            </div>
+          </div>
+
+          <section class="dashboard-grid">
+            <article class="panel-card compose-panel">
+              <div class="panel-header">
+                <h3>New note</h3>
+                <p>Zero-knowledge encrypted note creation.</p>
+              </div>
+              <form id="note_form" class="stack-form">
+                <label>
+                  Title
+                  <input id="note_title" name="title" placeholder="Note Title" required />
+                </label>
+                <label>
+                  Content
+                  <textarea id="note_content" name="content" rows="4" placeholder="Write securely..." required></textarea>
+                </label>
+                <label>
+                  Categories
+                  <input id="note_categories" name="categories" placeholder="e.g. personal, urgent" />
+                </label>
+                <div class="note-options-row">
+                  <label>
+                    Color
+                    <select id="note_color" name="color">
+                      <option value="violet">Violet</option>
+                      <option value="pink">Pink</option>
+                      <option value="cyan">Cyan</option>
+                      <option value="amber">Amber</option>
+                      <option value="green">Green</option>
+                      <option value="indigo">Indigo</option>
+                    </select>
+                  </label>
+                  <label class="check-row">
+                    <input id="note_pinned" name="pinned" type="checkbox" />
+                    Pin note
+                  </label>
+                </div>
+                <button id="btn_create_note" type="submit" class="primary-btn">
+                  <span class="btn-text">Save Note</span>
+                  <span class="btn-spinner"></span>
+                </button>
+              </form>
+
+              <!-- Backup Section -->
+              <div class="backup-section">
+                <h3>Backup & Restore</h3>
+                <div class="backup-grid">
+                  <div id="btn_export" class="backup-card" role="button" tabindex="0">
+                    <div class="backup-card-icon">📦</div>
+                    <div class="backup-card-title">Export</div>
+                    <div class="backup-card-desc">Download all your notes as a JSON file</div>
+                  </div>
+                  <div id="btn_import" class="backup-card" role="button" tabindex="0">
+                    <div class="backup-card-icon">📥</div>
+                    <div class="backup-card-title">Import</div>
+                    <div class="backup-card-desc">Restore notes from a JSON backup</div>
+                  </div>
+                  <input id="import_file" type="file" accept=".json" class="import-file-input" />
+                </div>
+              </div>
+            </article>
+
+            <article class="notes-panel">
+              <div id="stats_strip" class="stats-strip">
+                <div class="stat-card"><span id="stat_total">0</span><small>Total</small></div>
+                <div class="stat-card"><span id="stat_pinned">0</span><small>Pinned</small></div>
+                <div class="stat-card"><span id="stat_categories">0</span><small>Tags</small></div>
+              </div>
+              <div class="notes-toolbar">
+                <div class="search-row">
+                  <input id="search_q" placeholder="Search notes..." />
+                  <button id="btn_search" type="button" class="secondary-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    Search
+                  </button>
+                  <button id="btn_clear_search" type="button" class="ghost-btn">Clear</button>
+                </div>
+                <div class="filter-row">
+                  <select id="sort_notes" aria-label="Sort notes">
+                    <option value="updated_desc">Recently updated</option>
+                    <option value="created_desc">Newest created</option>
+                    <option value="title_asc">Title A-Z</option>
+                  </select>
+                  <select id="filter_pin" aria-label="Filter pinned notes">
+                    <option value="all">All notes</option>
+                    <option value="pinned">Pinned only</option>
+                    <option value="unpinned">Unpinned only</option>
+                  </select>
+                </div>
+                <div id="category_filters" class="category-filters" aria-label="Category filters"></div>
+              </div>
+              <!-- Skeleton loading placeholders -->
+              <div id="notes_skeleton" class="notes-grid" hidden>
+                <div class="skeleton-card">
+                  <div class="skeleton-line"></div>
+                  <div class="skeleton-line"></div>
+                  <div class="skeleton-line"></div>
+                  <div class="skeleton-line"></div>
+                  <div class="skeleton-line"></div>
+                  <div class="skeleton-line"></div>
+                </div>
+                <div class="skeleton-card">
+                  <div class="skeleton-line"></div>
+                  <div class="skeleton-line"></div>
+                  <div class="skeleton-line"></div>
+                  <div class="skeleton-line"></div>
+                  <div class="skeleton-line"></div>
+                  <div class="skeleton-line"></div>
+                </div>
+                <div class="skeleton-card">
+                  <div class="skeleton-line"></div>
+                  <div class="skeleton-line"></div>
+                  <div class="skeleton-line"></div>
+                  <div class="skeleton-line"></div>
+                  <div class="skeleton-line"></div>
+                  <div class="skeleton-line"></div>
+                </div>
+              </div>
+              <div id="notes_empty" class="empty-state">
+                <svg class="empty-state-icon" viewBox="0 0 80 80" fill="none">
+                  <rect x="12" y="8" width="44" height="56" rx="6" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3" opacity="0.4"/>
+                  <rect x="24" y="20" width="44" height="56" rx="6" stroke="currentColor" stroke-width="2" opacity="0.25"/>
+                  <line x1="20" y1="24" x2="40" y2="24" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+                  <line x1="20" y1="32" x2="48" y2="32" stroke="currentColor" stroke-width="1.5" opacity="0.2"/>
+                  <line x1="20" y1="38" x2="44" y2="38" stroke="currentColor" stroke-width="1.5" opacity="0.2"/>
+                  <line x1="20" y1="44" x2="36" y2="44" stroke="currentColor" stroke-width="1.5" opacity="0.2"/>
+                  <circle cx="56" cy="56" r="14" stroke="currentColor" stroke-width="2" opacity="0.15" fill="rgba(139,92,246,0.05)"/>
+                  <line x1="52" y1="56" x2="60" y2="56" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+                  <line x1="56" y1="52" x2="56" y2="60" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+                </svg>
+                <div class="empty-state-title">No notes yet</div>
+                <div class="empty-state-text">Create your first securely encrypted note using the form.</div>
+              </div>
+              <div id="notes_list" class="notes-grid"></div>
+            </article>
+          </section>
+        </section>
+      </div>
+
+      <!-- Footer -->
+      <footer class="app-footer">
+        <div class="footer-badge">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          End-to-End Encrypted · Zero Knowledge
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Edit Dialog -->
+  <dialog id="edit_dialog" class="edit-dialog">
+    <form id="edit_form" method="dialog" class="panel-card dialog-card">
+      <div class="panel-header">
+        <h3>Edit note</h3>
+        <p>Update this note securely.</p>
+      </div>
+      <input type="hidden" id="edit_note_id" />
+      <label>
+        Title
+        <input id="edit_title" placeholder="Note title" required />
+      </label>
+      <label>
+        Content
+        <textarea id="edit_content" rows="5" placeholder="Note content" required></textarea>
+      </label>
+      <label>
+        Categories
+        <input id="edit_categories" placeholder="work, ideas" />
+      </label>
+      <div class="note-options-row">
+        <label>
+          Color
+          <select id="edit_color">
+            <option value="violet">Violet</option>
+            <option value="pink">Pink</option>
+            <option value="cyan">Cyan</option>
+            <option value="amber">Amber</option>
+            <option value="green">Green</option>
+            <option value="indigo">Indigo</option>
+          </select>
+        </label>
+        <label class="check-row">
+          <input id="edit_pinned" type="checkbox" />
+          Pin note
+        </label>
+      </div>
+      <div class="dialog-actions">
+        <button id="btn_cancel_edit" type="button" class="ghost-btn">Cancel</button>
+        <button id="btn_save_edit" type="submit" class="primary-btn">
+          <span class="btn-text">Save changes</span>
+          <span class="btn-spinner"></span>
+        </button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Custom Delete Confirmation Dialog -->
+  <dialog id="confirm_dialog" class="confirm-dialog">
+    <div class="confirm-card">
+      <div class="confirm-icon">🗑️</div>
+      <h3>Delete note</h3>
+      <p id="confirm_message">Are you sure you want to delete this note? This action cannot be undone.</p>
+      <div class="confirm-actions">
+        <button id="btn_confirm_cancel" type="button" class="secondary-btn">Cancel</button>
+        <button id="btn_confirm_delete" type="button" class="danger-btn">
+          <span class="btn-text">Delete</span>
+          <span class="btn-spinner"></span>
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Note Card Template -->
+  <template id="note_template">
+    <article class="note-card">
+      <div class="note-card-head">
+        <div>
+          <span class="pin-label" hidden>Pinned</span>
+          <h4></h4>
+          <p class="note-meta"></p>
+        </div>
+        <div class="note-actions">
+          <button type="button" class="ghost-btn icon-btn note-pin-btn" title="Pin note">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"></path><path d="M9 10.76 5 7l2-2 3.76 4H17l2 2-4 4v2H9v-2l-4-4 2-2 2 1.76Z"></path></svg>
+          </button>
+          <button type="button" class="ghost-btn icon-btn note-copy-btn" title="Copy note">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          </button>
+          <button type="button" class="ghost-btn icon-btn note-edit-btn" title="Edit">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+          </button>
+          <button type="button" class="ghost-btn icon-btn danger-text note-delete-btn" title="Delete">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+          </button>
+        </div>
+      </div>
+      <p class="note-content"></p>
+      <div class="note-tags"></div>
+    </article>
+  </template>
+
+  <script src="/app.js"></script>
+</body>
+</html>
