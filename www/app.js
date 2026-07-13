@@ -398,7 +398,11 @@ async function renderNotes() {
     pinLabel.hidden = !noteItem.is_pinned;
     title.textContent = noteItem.title;
     meta.textContent = `${noteItem.is_pinned ? "Pinned · " : ""}Updated ${formatTimestamp(noteItem.modified_date)}`;
-    content.textContent = noteItem.content;
+    if (typeof marked !== 'undefined' && typeof DOMPurify !== 'undefined') {
+      content.innerHTML = DOMPurify.sanitize(marked.parse(noteItem.content));
+    } else {
+      content.textContent = noteItem.content;
+    }
 
     const categoryList = state.noteCategories.get(noteItem.note_id) || [];
     tags.innerHTML = "";

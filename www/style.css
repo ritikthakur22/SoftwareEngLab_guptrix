@@ -960,11 +960,82 @@ button:disabled {
   font-size: 0.9375rem;
   color: #d1d5db;
   line-height: 1.6;
-  white-space: pre-wrap;
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  max-height: 180px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.2) transparent;
+}
+
+.note-content::-webkit-scrollbar {
+  width: 4px;
+}
+.note-content::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+}
+
+.note-content h1, .note-content h2, .note-content h3, .note-content h4 {
+  margin-top: 12px;
+  margin-bottom: 8px;
+  color: #fff;
+  font-family: 'Outfit', sans-serif;
+}
+
+.note-content p {
+  margin-bottom: 10px;
+}
+
+.note-content p:last-child {
+  margin-bottom: 0;
+}
+
+.note-content ul, .note-content ol {
+  margin-left: 24px;
+  margin-bottom: 10px;
+}
+
+.note-content code {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.85em;
+  color: var(--accent);
+}
+
+.note-content pre {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 12px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.note-content pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.note-content a {
+  color: var(--primary);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--primary);
+  transition: all 0.2s;
+}
+
+.note-content a:hover {
+  color: var(--secondary);
+  border-bottom-color: var(--secondary);
+}
+
+.note-content blockquote {
+  border-left: 3px solid var(--primary);
+  padding-left: 12px;
+  margin: 10px 0;
+  color: var(--text-secondary);
+  font-style: italic;
 }
 
 .note-tags {
