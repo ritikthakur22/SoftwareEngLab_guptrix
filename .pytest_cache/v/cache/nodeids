@@ -1,0 +1,16 @@
+[
+  "tests/test_backup_unit.py::test_export_notes_writes_expected_payload",
+  "tests/test_backup_unit.py::test_import_notes_creates_notes_and_categories",
+  "tests/test_category_unit.py::test_assign_and_list_categories_for_note",
+  "tests/test_category_unit.py::test_create_reuses_existing_category_name",
+  "tests/test_encryption_unit.py::test_encrypt_decrypt_round_trip",
+  "tests/test_integration_flow.py::test_full_app_flow_integration",
+  "tests/test_note_unit.py::test_create_edit_delete_note",
+  "tests/test_note_unit.py::test_search_matches_title_and_content",
+  "tests/test_session_unit.py::test_session_invalid_after_expiry",
+  "tests/test_session_unit.py::test_session_validate_and_terminate",
+  "tests/test_system_flow.py::test_system_end_to_end_multi_user_isolation",
+  "tests/test_user_unit.py::test_login_fails_with_bad_password",
+  "tests/test_user_unit.py::test_register_and_login_success",
+  "tests/test_user_unit.py::test_update_profile_changes_username_and_password"
+]

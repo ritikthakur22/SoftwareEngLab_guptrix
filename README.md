@@ -24,6 +24,15 @@ A lightweight, zero-knowledge, end-to-end encrypted notes application featuring 
 - `tests/`: unit, integration, and system tests
 - `.github/workflows/python-tests.yml`: CI test workflow
 
+## Default Credentials
+
+When running the application locally or in a fresh deployment, the following default accounts are seeded for testing purposes:
+
+| Role  | Username | Email               | Password  |
+| ----- | -------- | ------------------- | --------- |
+| Admin | `admin`  | `admin@example.com` | `admin123`|
+| Test  | `test`   | `test@example.com`  | `test123` |
+
 ## Requirements
 
 - Python 3.12+ (3.14 works in your current setup)
