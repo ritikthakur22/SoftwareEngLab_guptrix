@@ -1,6 +1,8 @@
-# Guptrix Secure Notes
+# Gupt - Secure Encrypted Notes
 
-A lightweight, zero-knowledge, end-to-end encrypted notes application featuring a sleek, modern UI. Built with a Python/Flask backend and a premium glassmorphic frontend.
+A secure, offline-first notes application with a beautiful premium UI, powered by a lightweight Flask/SQLite backend.
+
+📄 **[View Lab Report PDF (till lab3.pdf)](till%20lab3.pdf)**
 
 ## Features
 - **Advanced UI**: Premium dark mode, animated gradient backgrounds, glassmorphic panels, and neon glow accents.
