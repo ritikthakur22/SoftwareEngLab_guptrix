@@ -76,6 +76,16 @@ const dom = {
   navExport: document.getElementById("nav_export"),
   navImport: document.getElementById("nav_import"),
   navShortcuts: document.getElementById("nav_shortcuts"),
+  navProfile: document.getElementById("nav_profile"),
+  // Panels
+  composePanel: document.getElementById("compose_panel"),
+  mainNotesPanel: document.getElementById("main_notes_panel"),
+  profilePanel: document.getElementById("profile_panel"),
+  // Profile elements
+  profileUsernameDisp: document.getElementById("profile_username_disp"),
+  profileEmailDisp: document.getElementById("profile_email_disp"),
+  profileInitial: document.getElementById("profile_initial"),
+  btnProfileLogout: document.getElementById("btn_profile_logout"),
 };
 
 // ─── Toast Notification System ──────────────────
@@ -224,6 +234,12 @@ function syncUiForSession() {
   dom.sessionBadge.textContent = loggedIn ? `${state.user.username}` : "Signed out";
   dom.sessionBadge.classList.toggle("online", loggedIn);
   dom.welcomeTitle.textContent = loggedIn ? `${state.user.username}'s notes` : "Your notes";
+  
+  if (loggedIn) {
+    dom.profileUsernameDisp.textContent = state.user.username;
+    dom.profileEmailDisp.textContent = state.user.email;
+    dom.profileInitial.textContent = state.user.username.charAt(0).toUpperCase();
+  }
 }
 
 // ─── Note Count ─────────────────────────────────
@@ -712,6 +728,7 @@ async function logoutUser() {
   dom.notesEmpty.hidden = false;
   updateNoteCount();
   setStatus("Signed out.");
+  dom.navNotes.click();
 }
 
 // ─── Search ─────────────────────────────────────
@@ -900,11 +917,31 @@ dom.importFile.addEventListener("change", (event) => {
   }
 });
 
-// Sidebar nav items (export/import from sidebar)
+// Sidebar nav items
 dom.navNotes.addEventListener("click", () => {
   closeSidebar();
+  dom.composePanel.hidden = false;
+  dom.mainNotesPanel.hidden = false;
+  dom.profilePanel.hidden = true;
+  document.querySelectorAll('.sidebar-nav-item').forEach(item => item.classList.remove('active'));
+  dom.navNotes.classList.add('active');
   document.querySelector(".content-scroll").scrollTo({ top: 0, behavior: "smooth" });
 });
+
+dom.navProfile.addEventListener("click", () => {
+  closeSidebar();
+  if (!state.user) {
+    showToast("Please log in first.", "error");
+    return;
+  }
+  dom.composePanel.hidden = true;
+  dom.mainNotesPanel.hidden = true;
+  dom.profilePanel.hidden = false;
+  document.querySelectorAll('.sidebar-nav-item').forEach(item => item.classList.remove('active'));
+  dom.navProfile.classList.add('active');
+});
+
+dom.btnProfileLogout.addEventListener("click", logoutUser);
 
 dom.navExport.addEventListener("click", () => {
   closeSidebar();
