@@ -8,6 +8,14 @@ A lightweight, zero-knowledge, end-to-end encrypted notes application featuring 
 - **Note Management**: Create, edit, delete, and categorize notes securely.
 - **API-First**: Frontend communicates entirely via minimal REST APIs (`/api/*`).
 
+## Screenshots
+
+<div style="display: flex; gap: 10px; overflow-x: auto;">
+  <img src="docs/screenshots/screenshot-1.png" alt="Screenshot 1" width="400">
+  <img src="docs/screenshots/screenshot-2.png" alt="Screenshot 2" width="400">
+  <img src="docs/screenshots/screenshot-3.png" alt="Screenshot 3" width="400">
+</div>
+
 ## Project Structure
 
 - `user.py`: user registration, login, and profile updates
